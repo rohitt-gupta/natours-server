@@ -1,9 +1,21 @@
 const fs = require('fs');
 const express = require('express');
 const { application } = require('express');
+const { log } = require('console');
 
 const app = express();
 app.use(express.json()); // function that can modify the upcoming json data
+
+app.use((req, res, next) => {
+  log('hello from the middlewear');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.responseTime = new Date().toISOString();
+
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
