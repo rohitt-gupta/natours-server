@@ -8,8 +8,11 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // 1) MIDDLEWARES
-
-app.use(morgan('dev')); // logs the api request-response cycle details
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+// logs the api request-response cycle details
 app.use(express.json()); // function that can modify the upcoming json data
 app.use(express.static(`${__dirname}/public`));
 
