@@ -18,6 +18,17 @@ mongoose
   })
   .then(() => console.log('DB conncetion successful'));
 
+// const testTour = new Tour({
+//   name: 'The park camper',
+//   price: 997
+// })
+
+// testTour.save().then(doc => {
+//   console.log(doc);
+// }).catch(error => {
+//   console.log("error: ", error);
+// })
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);

@@ -22,5 +22,14 @@
     "express": "^4.18.2",
     "mongoose": "^5.13.15",
     "morgan": "^1.10.0"
+  },
+  "eslintConfig": {
+    
+    "rules": {
+      "react/jsx-filename-extension": "off",
+      "react/jsx-props-no-spreading": "off",
+      "linebreak-style": 0
+      
+    }
   }
 }
