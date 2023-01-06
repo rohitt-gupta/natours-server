@@ -21,15 +21,14 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^5.13.15",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "slugify": "^1.6.5"
   },
   "eslintConfig": {
-    
     "rules": {
       "react/jsx-filename-extension": "off",
       "react/jsx-props-no-spreading": "off",
       "linebreak-style": 0
-      
     }
   }
 }
