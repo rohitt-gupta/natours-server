@@ -20,12 +20,12 @@ exports.getAllTours = async (req, res) => {
     res.status(200).send({
       status: 'success',
       results: tours.length,
-      data: { tours },
+      data: { tours }
     });
   } catch (error) {
     res.status(400).send({
       status: 'Fail',
-      message: error,
+      message: error
     });
   }
 };
@@ -35,12 +35,12 @@ exports.getTour = async (req, res) => {
     const tour = await Tour.findById(req.params.id);
     res.status(200).send({
       status: 'success',
-      data: { tour },
+      data: { tour }
     });
   } catch (error) {
     res.status(400).send({
       status: 'fail',
-      message: error,
+      message: error
     });
   }
 };
@@ -50,12 +50,12 @@ exports.createTour = async (req, res) => {
     const newTour = await Tour.create(req.body);
     res.status(201).json({
       status: 'success',
-      data: { tour: newTour },
+      data: { tour: newTour }
     });
   } catch (error) {
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid Data Sent',
+      message: error.message
     });
   }
 };
@@ -64,18 +64,18 @@ exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
     res.status(200).json({
       status: 'success',
       data: {
-        tour,
-      },
+        tour
+      }
     });
   } catch (error) {
     res.status(400).json({
       status: 'fail',
-      message: error,
+      message: error
     });
   }
 };
@@ -85,12 +85,12 @@ exports.deleteTour = async (req, res) => {
     await Tour.findByIdAndDelete(req.params.id);
     res.status(204).send({
       status: 'success',
-      data: null,
+      data: null
     });
   } catch (error) {
     res.status(400).send({
       status: 'fail',
-      message: error,
+      message: error
     });
   }
 };
@@ -99,10 +99,10 @@ exports.getTourStats = async (req, res) => {
   try {
     const stats = await Tour.aggregate([
       {
-        $match: { ratingsAverage: { $gte: 4.5 } },
+        $match: { ratingsAverage: { $gte: 4.5 } }
       },
       {
-        // group method requires id field which is by 
+        // group method requires id field which is by
         // which you want to group the results
         $group: {
           _id: { $toUpper: '$difficulty' },
@@ -111,21 +111,21 @@ exports.getTourStats = async (req, res) => {
           avgRating: { $avg: '$ratingsAverage' },
           avgPrice: { $avg: '$price' },
           minPrice: { $min: '$price' },
-          maxPrice: { $max: '$price' },
-        },
+          maxPrice: { $max: '$price' }
+        }
       },
       {
-        $sort: { avgPrice: 1 },
-      },
+        $sort: { avgPrice: 1 }
+      }
     ]);
     res.status(200).json({
       status: 'success',
-      stats,
+      stats
     });
   } catch (error) {
     res.status(400).send({
       status: 'fail',
-      message: error,
+      message: error
     });
   }
 };
@@ -137,13 +137,13 @@ exports.getMonthlyPlan = async (req, res) => {
       {
         // startDates have 3 values each tour data.
         // to divide one tour into all the copies wrt date is done using unwind
-        $unwind: '$startDates',
+        $unwind: '$startDates'
       },
       {
         $match: {
           startDates: {
             $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31`),
+            $lte: new Date(`${year}-12-31`)
           }
         }
       },
@@ -168,16 +168,15 @@ exports.getMonthlyPlan = async (req, res) => {
       {
         $limit: 12
       }
-
     ]);
     res.status(200).json({
       status: 'success',
-      plan,
+      plan
     });
   } catch (error) {
     res.status(400).send({
       status: 'fail',
-      message: error,
+      message: error
     });
   }
 };
