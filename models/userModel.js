@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -42,10 +43,12 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: {
     type: Date
-  }
-  // passwordChangedAt: Date
+  },
+  passwordResetToken: String,
+  passwordResetExpires: Date
 });
 
+// DOCCUMENT MIDDLEWARES ----------------------------------------------------------------
 // encrypting the password and then deleting the confirm password field.
 userSchema.pre('save', async function(next) {
   // only runs this function if password is modified
@@ -57,6 +60,17 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// changing the passwordChangedAt property of the model when password is changed.
+userSchema.pre('save', async function(next) {
+  // only runs this function if password is modified
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+
+  next();
+});
+
+// DOCUMENT INSTANCE METHODS --------------------------------
 userSchema.methods.correctPassword = async function(
   candidatePassword,
   userPassword
@@ -76,6 +90,23 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
     return JWTTimestamp < changedTimestamp;
   }
   return false;
+};
+
+userSchema.methods.createPasswordResetToken = function() {
+  // creating a new password reset token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  // setting the password reset token in db.
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // console.log({ resetToken }, this.passwordResetToken);
+
+  // setting the password expiration to be in 10 mins from now
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);
