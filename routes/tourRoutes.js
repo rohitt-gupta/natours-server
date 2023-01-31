@@ -4,8 +4,26 @@ const router = express.Router();
 
 const tourController = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
+// const reviewController = require('./../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 // router.param('id', tourController.checkId);
+
+//Nested Review ROute
+/**
+ * POST /tour/{TOUR_ID}/reviews
+ * GET /tour/{TOUR_ID}/reviews
+ * GET /tour/{TOUR_ID}/reviews/{REVIEW_ID}
+ */
+// router
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user', 'admin'),
+//     reviewController.createReview
+//   );
+
+router.use('/:tourId/reviews', reviewRouter);
 router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
