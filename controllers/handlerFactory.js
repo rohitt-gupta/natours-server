@@ -72,6 +72,7 @@ exports.getAll = Model =>
 
     // console.log('features', features);
     const doc = await features.query;
+    // const doc = await features.query.explain();
 
     // console.log('doc', doc);
     res.status(200).send({
