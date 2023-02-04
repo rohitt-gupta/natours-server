@@ -27,6 +27,7 @@ const createSendToken = (user, statusCode, res) => {
   res.cookie('jwt', token, cookieOptions);
 
   // not show password.
+  // commit the request
   user.password = undefined;
   res.status(statusCode).json({
     status: 'success',
