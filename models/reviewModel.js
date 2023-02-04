@@ -31,7 +31,7 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function(next) {
+reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
     select: 'name photo'
@@ -40,7 +40,7 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
-reviewSchema.statics.calcAverageRatings = async function(tourId) {
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
   const stats = await this.aggregate([
     {
       $match: { tour: tourId }
@@ -57,7 +57,6 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   //   ratingsQuantity: stats[0].nRating,
   //   ratingsAverage: stats[0].avgRating
   // });
-  // console.log(stats);
   if (stats.length > 0) {
     await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: stats[0].nRating,
@@ -71,7 +70,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   }
 };
 
-reviewSchema.post('save', function() {
+reviewSchema.post('save', function () {
   // this points to current review
   // since we dont have Review document variable right now, we have to use this.constructor
   // Review.calcAverageRatings(this.tour);
@@ -89,13 +88,13 @@ SO we implemented the below functions(2).
 
 //findByIdAndUpdate
 // findByIdAndDelete
-reviewSchema.pre(/^findOneAnd/, async function(next) {
+reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
   // console.log(this.r);
   next();
 });
 
-reviewSchema.post(/^findOneAnd/, async function(next) {
+reviewSchema.post(/^findOneAnd/, async function (next) {
   // await this.findOne(); does NOT work here, the wuery has already executed
   await this.r.constructor.calcAverageRatings(this.r.tour);
   // console.log(await this.r.constructor.calcAverageRatings(this.r.tour));
