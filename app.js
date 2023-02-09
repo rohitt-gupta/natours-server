@@ -5,6 +5,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 
+const cors = require('cors');
 // const router = require('./routes/tourRoutes');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
@@ -14,6 +15,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
+app.use(cors());
 
 // 1) MIDDLEWARES
 // Set security http headers
