@@ -21,10 +21,12 @@ class APIFeatures {
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
+      // console.log('sortBy', sortBy);
       this.query = this.query.sort(sortBy);
+      // console.log('sortBy', this.query);
     } else {
       // if no sort functionality is povided it will give with the order of date created latest first.
-      this.query = this.query.sort('-createdAt');
+      this.query = this.query.sort({ '-createdAt': 1 });
     }
     return this;
   }
