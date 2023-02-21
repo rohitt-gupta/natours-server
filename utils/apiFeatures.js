@@ -1,7 +1,12 @@
+/* eslint-disable no-unused-vars */
+
+const { login } = require('../controllers/authController');
+
 /**
  * queryString is somthing which comes from the express,from the API.
  * query is
  */
+
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -9,25 +14,27 @@ class APIFeatures {
   }
 
   filter() {
-    const { ...queryObj } = this.queryString;
+    const queryObj = { ...this.queryString };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(el => delete queryObj[el]);
+
+    // 1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
-    // let query = Tour.find(JSON.parse(queryStr));
+
     return this;
   }
 
-  sort() {
+  sortData() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
-      // console.log('sortBy', sortBy);
       this.query = this.query.sort(sortBy);
-      // console.log('sortBy', this.query);
     } else {
-      // if no sort functionality is povided it will give with the order of date created latest first.
-      this.query = this.query.sort({ '-createdAt': 1 });
+      this.query = this.query.sort('-createdAt');
     }
+
     return this;
   }
 

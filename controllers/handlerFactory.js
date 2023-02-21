@@ -66,15 +66,12 @@ exports.getAll = Model =>
 
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
-      .sort()
+      .sortData()
       .limitFields()
       .paginate();
 
-    // console.log('features', features);
     const doc = await features.query;
-    // const doc = await features.query.explain();
 
-    // console.log('doc', doc);
     res.status(200).send({
       status: 'success',
       results: doc.length,
